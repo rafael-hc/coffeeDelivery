@@ -1,4 +1,3 @@
-import { NavLink, useNavigate } from 'react-router-dom'
 import { Minus, Plus, ShoppingCart } from 'phosphor-react'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -11,9 +10,6 @@ import {
   Price,
   Description,
   LinkBuy,
-  PanelDialog,
-  TitleDialog,
-  ButtonDialog,
   InputQnt,
   ButtonChangeAmount,
   Amount,
@@ -22,7 +18,6 @@ import {
 import { ProductCoffee } from '../../../../utils/coffee-list'
 import { useContext, useState } from 'react'
 import { CoffeesContext } from '../../../../context/CoffeesContext'
-import { Dialog } from '@headlessui/react'
 import { formatAsDecimal } from '../../../../utils/formarNumber'
 
 interface Coffees {
@@ -31,8 +26,6 @@ interface Coffees {
 
 export function CoffeeCard({ coffee }: Coffees) {
   const { addCoffeeToCheckout } = useContext(CoffeesContext)
-  const [isOpen, setIsOpen] = useState(false)
-  const navigate = useNavigate()
   const [amount, setAmount] = useState(1)
 
   function handleSendCoffeeToCart() {
@@ -44,7 +37,6 @@ export function CoffeeCard({ coffee }: Coffees) {
       amount,
     }
     addCoffeeToCheckout(coffeeToCheckout)
-    setIsOpen(true)
   }
 
   function handleIncreaseQuantityOfProducts() {
@@ -97,19 +89,6 @@ export function CoffeeCard({ coffee }: Coffees) {
           <ShoppingCart weight="fill" size={22} />
         </LinkBuy>
       </BaseProduto>
-
-      <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
-        <PanelDialog>
-          <TitleDialog>Deactivate account</TitleDialog>
-
-          <ButtonDialog onClick={() => setIsOpen(false)}>
-            Continuar comprando
-          </ButtonDialog>
-          <ButtonDialog onClick={() => navigate('/checkout')}>
-            Ir para o carrinho
-          </ButtonDialog>
-        </PanelDialog>
-      </Dialog>
     </ProductContainer>
   )
 }

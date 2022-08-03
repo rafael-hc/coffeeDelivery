@@ -1,4 +1,5 @@
 import { MapPinLine } from 'phosphor-react'
+import { ChangeEvent } from 'react'
 import {
   PostalCode,
   Street,
@@ -11,7 +12,11 @@ import {
   FormContainer,
 } from './styles'
 
-export function FormAddress() {
+interface FormAddressProps {
+  handleInputTyping: (event: ChangeEvent<HTMLInputElement>) => void
+}
+
+export function FormAddress({ handleInputTyping }: FormAddressProps) {
   return (
     <FormContainer>
       <header>
@@ -22,13 +27,48 @@ export function FormAddress() {
         </span>
       </header>
       <Address action="">
-        <PostalCode type="text" placeholder="CEP" />
-        <Street type="text" placeholder="Rua" />
-        <Number type="text" placeholder="Número" />
-        <AddressSupplement type="text" placeholder="Complemento Opcional" />
-        <District type="text" placeholder="Bairro" />
-        <City type="text" placeholder="Cidade" />
-        <State type="text" placeholder="UF" />
+        <PostalCode
+          type="text"
+          name="zipCode"
+          placeholder="CEP"
+          onChange={handleInputTyping}
+        />
+        <Street
+          type="text"
+          name="street"
+          placeholder="Rua"
+          onChange={handleInputTyping}
+        />
+        <Number
+          type="text"
+          name="numberOf"
+          placeholder="Número"
+          onChange={handleInputTyping}
+        />
+        <AddressSupplement
+          type="text"
+          name="complement"
+          placeholder="Complemento Opcional"
+          onChange={handleInputTyping}
+        />
+        <District
+          type="text"
+          name="district"
+          placeholder="Bairro"
+          onChange={handleInputTyping}
+        />
+        <City
+          type="text"
+          name="city"
+          placeholder="Cidade"
+          onChange={handleInputTyping}
+        />
+        <State
+          type="text"
+          name="state"
+          placeholder="UF"
+          onChange={handleInputTyping}
+        />
       </Address>
     </FormContainer>
   )

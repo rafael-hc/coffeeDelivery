@@ -92,7 +92,7 @@ export const OrderContainer = styled.section`
   gap: 1rem;
 `
 
-export const Order = styled(BaseInfoContainer)`
+export const OrderList = styled(BaseInfoContainer)`
   border-radius: 6px 44px;
 
   a {

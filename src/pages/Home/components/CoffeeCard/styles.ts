@@ -100,49 +100,6 @@ export const LinkBuy = styled.button`
   }
 `
 
-export const PanelDialog = styled(Dialog.Panel)`
-  position: absolute;
-  top: 150vh;
-  left: 50%;
-  transform: translateX(-50%);
-  /* width: 30rem;
-  height: 12.5rem; */
-
-  display: flex;
-  padding: 2rem;
-  flex-direction: column;
-  border-radius: 10px;
-  border: 1px solid ${(props) => props.theme['base-title']};
-  background-color: ${(props) => props.theme.white};
-`
-
-export const TitleDialog = styled(Dialog.Title)`
-  font-size: 1.5rem;
-  text-align: center;
-`
-export const ButtonDialog = styled.button`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.75rem 0;
-  margin-top: 1.5rem;
-
-  border-radius: 6px;
-  cursor: pointer;
-
-  font-size: 0.875rem;
-  font-weight: 700;
-  line-height: 160%;
-  text-transform: uppercase;
-
-  background-color: ${(props) => props.theme.yellow};
-  color: ${(props) => props.theme.white};
-
-  &:hover {
-    background-color: ${(props) => props.theme['yellow-dark']};
-  }
-`
 // InputAmount
 
 export const InputQnt = styled.div`

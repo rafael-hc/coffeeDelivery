@@ -9,9 +9,20 @@ import {
   Trash,
   Warning,
 } from 'phosphor-react'
-import { useContext, useEffect, useState } from 'react'
+import {
+  ChangeEvent,
+  MouseEvent,
+  MouseEventHandler,
+  useContext,
+  useState,
+} from 'react'
 import { NavLink } from 'react-router-dom'
-import { CoffeeAsCheckout, CoffeesContext } from '../../context/CoffeesContext'
+import {
+  Address,
+  CoffeeAsCheckout,
+  CoffeesContext,
+  Order,
+} from '../../context/CoffeesContext'
 import { formatAsDecimal } from '../../utils/formarNumber'
 import { FormAddress } from './components/FormAddress'
 import {
@@ -19,7 +30,7 @@ import {
   AddressContainer,
   OrderContainer,
   MethodsPayment,
-  Order,
+  OrderList,
   ButtonContainer,
   ButtonPayment,
   TotalItens,
@@ -43,34 +54,19 @@ interface Payment {
 }
 
 export function Checkout() {
-  const [selectedPayment, setSelectedPayment] = useState<Payment>({
-    credCard: false,
-    debitCard: false,
-    money: false,
-  })
+  const [selectedPayment, setSelectedPayment] = useState('')
+  const [address, setAddress] = useState<Address>({} as Address)
 
-  const { coffeeCheckout, updateAmountCoffee, removeCoffeeFromCheckout } =
-    useContext(CoffeesContext)
+  const {
+    coffeeCheckout,
+    updateAmountCoffee,
+    removeCoffeeFromCheckout,
+    sendOrder,
+  } = useContext(CoffeesContext)
 
-  const { credCard, debitCard, money } = selectedPayment
-
-  function resetPayment() {
-    setSelectedPayment(
-      (state) => (state = { credCard: false, debitCard: false, money: false }),
-    )
-  }
-
-  function handleSelectedCredCard() {
-    resetPayment()
-    setSelectedPayment((state) => (state = { ...state, credCard: true }))
-  }
-  function handleSelectedDebitCard() {
-    resetPayment()
-    setSelectedPayment((state) => (state = { ...state, debitCard: true }))
-  }
-  function handleSelectedMoney() {
-    resetPayment()
-    setSelectedPayment((state) => (state = { ...state, money: true }))
+  function handleSelectedPayment(event: MouseEvent<HTMLButtonElement>) {
+    const method = event.currentTarget.name
+    setSelectedPayment(method)
   }
 
   function handleIncreaseQuantityOfProducts(coffeeAmount: number, id: string) {
@@ -97,13 +93,37 @@ export function Checkout() {
   const taxDelivery = 3.5
   const totalFinally = total + taxDelivery
 
+  function handleInputTyping(event: ChangeEvent<HTMLInputElement>) {
+    const { name, value } = event.target
+
+    const newAddress = {
+      ...address,
+      [name]: value,
+    }
+
+    setAddress(newAddress)
+  }
+
+  function mountOrder() {
+    const mountedOrder: Order = {
+      coffees: coffeeCheckout,
+      address,
+      paymentMethod: selectedPayment,
+      sendDate: new Date(),
+    }
+    sendOrder(mountedOrder)
+    alert('pedido enviado')
+  }
+
+  console.log(`Método de pagamento: ${selectedPayment}`)
+
   return (
     <CheckoutContainer>
       {coffeeCheckout.length ? (
         <>
           <AddressContainer>
             <h3>Complete seu pedido</h3>
-            <FormAddress />
+            <FormAddress handleInputTyping={handleInputTyping} />
             <MethodsPayment>
               <header>
                 <CurrencyDollar size={22} />
@@ -117,24 +137,27 @@ export function Checkout() {
               </header>
               <ButtonContainer>
                 <ButtonPayment
-                  disabled={credCard}
-                  onClick={handleSelectedCredCard}
+                  disabled={selectedPayment === 'credCard'}
+                  name="credCard"
+                  onClick={handleSelectedPayment}
                   type="button"
                 >
                   <CreditCard size={16} />
                   <p>Cartão de crédito</p>
                 </ButtonPayment>
                 <ButtonPayment
-                  disabled={debitCard}
-                  onClick={handleSelectedDebitCard}
+                  disabled={selectedPayment === 'debitCard'}
+                  name="debitCard"
+                  onClick={handleSelectedPayment}
                   type="button"
                 >
                   <Bank size={16} />
                   <p>Cartão de débito</p>
                 </ButtonPayment>
                 <ButtonPayment
-                  disabled={money}
-                  onClick={handleSelectedMoney}
+                  disabled={selectedPayment === 'money'}
+                  name="money"
+                  onClick={handleSelectedPayment}
                   type="button"
                 >
                   <Money size={16} />
@@ -145,7 +168,7 @@ export function Checkout() {
           </AddressContainer>
           <OrderContainer>
             <h3>Cafés selecionados</h3>
-            <Order>
+            <OrderList>
               <div>
                 {coffeeCheckout.map((coffee) => (
                   <ContainerCoffeeSelected key={coffee.id}>
@@ -212,10 +235,10 @@ export function Checkout() {
                   <strong>R$ {formatAsDecimal(totalFinally)}</strong>
                 </Total>
               </TotalDetail>
-              <NavLink role="button" to="/success">
+              <NavLink role="button" to="/success" onClick={mountOrder}>
                 Confirmar pedido
               </NavLink>
-            </Order>
+            </OrderList>
           </OrderContainer>
         </>
       ) : (
