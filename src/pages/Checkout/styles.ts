@@ -96,31 +96,32 @@ export const OrderList = styled(BaseInfoContainer)`
   border-radius: 6px 44px;
 
   a {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.75rem 0;
-    margin-top: 1.5rem;
-
-    border-radius: 6px;
-    cursor: pointer;
-
-    font-size: 0.875rem;
-    font-weight: 700;
-    line-height: 160%;
-    text-transform: uppercase;
-
-    background-color: ${(props) => props.theme.yellow};
-    color: ${(props) => props.theme.white};
-
-    &:hover {
-      background-color: ${(props) => props.theme['yellow-dark']};
-    }
   }
 `
 
-// export const ButtonOrder = styled.a``
+export const ButtonOrder = styled.button`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 0;
+  margin-top: 1.5rem;
+
+  border-radius: 6px;
+  cursor: pointer;
+
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 160%;
+  text-transform: uppercase;
+
+  background-color: ${(props) => props.theme.yellow};
+  color: ${(props) => props.theme.white};
+
+  &:hover {
+    background-color: ${(props) => props.theme['yellow-dark']};
+  }
+`
 
 export const TotalDetail = styled.div`
   display: flex;

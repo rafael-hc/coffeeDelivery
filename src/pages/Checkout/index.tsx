@@ -2,27 +2,20 @@ import {
   Bank,
   CreditCard,
   CurrencyDollar,
-  MapPinLine,
   Minus,
   Money,
   Plus,
   Trash,
   Warning,
 } from 'phosphor-react'
-import {
-  ChangeEvent,
-  MouseEvent,
-  MouseEventHandler,
-  useContext,
-  useState,
-} from 'react'
-import { NavLink } from 'react-router-dom'
+import { ChangeEvent, MouseEvent, useContext, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { CoffeesContext } from '../../context/CoffeesContext'
 import {
   Address,
   CoffeeAsCheckout,
-  CoffeesContext,
   Order,
-} from '../../context/CoffeesContext'
+} from '../../reducers/orderCheckout/reducer'
 import { formatAsDecimal } from '../../utils/formarNumber'
 import { FormAddress } from './components/FormAddress'
 import {
@@ -45,24 +38,21 @@ import {
   InputQnt,
   ButtonChangeAmount,
   Amount,
+  ButtonOrder,
 } from './styles'
-
-interface Payment {
-  credCard: boolean
-  debitCard: boolean
-  money: boolean
-}
 
 export function Checkout() {
   const [selectedPayment, setSelectedPayment] = useState('')
   const [address, setAddress] = useState<Address>({} as Address)
 
   const {
-    coffeeCheckout,
+    orderCoffees,
     updateAmountCoffee,
     removeCoffeeFromCheckout,
     sendOrder,
   } = useContext(CoffeesContext)
+
+  const navigate = useNavigate()
 
   function handleSelectedPayment(event: MouseEvent<HTMLButtonElement>) {
     const method = event.currentTarget.name
@@ -83,12 +73,9 @@ export function Checkout() {
     }
   }
 
-  const total = coffeeCheckout.reduce(
-    (total: number, item: CoffeeAsCheckout) => {
-      return (total += item.price * item.amount)
-    },
-    0,
-  )
+  const total = orderCoffees.reduce((total: number, item: CoffeeAsCheckout) => {
+    return (total += item.price * item.amount)
+  }, 0)
 
   const taxDelivery = 3.5
   const totalFinally = total + taxDelivery
@@ -105,21 +92,18 @@ export function Checkout() {
   }
 
   function mountOrder() {
-    const mountedOrder: Order = {
-      coffees: coffeeCheckout,
-      address,
-      paymentMethod: selectedPayment,
-      sendDate: new Date(),
+    if (orderCoffees && address && selectedPayment) {
+      sendOrder()
+      navigate('/success')
+      // alert('pedido enviado')
+    } else {
+      // alert('faltando informação')
     }
-    sendOrder(mountedOrder)
-    alert('pedido enviado')
   }
-
-  console.log(`Método de pagamento: ${selectedPayment}`)
 
   return (
     <CheckoutContainer>
-      {coffeeCheckout.length ? (
+      {orderCoffees.length ? (
         <>
           <AddressContainer>
             <h3>Complete seu pedido</h3>
@@ -170,7 +154,7 @@ export function Checkout() {
             <h3>Cafés selecionados</h3>
             <OrderList>
               <div>
-                {coffeeCheckout.map((coffee) => (
+                {orderCoffees.map((coffee) => (
                   <ContainerCoffeeSelected key={coffee.id}>
                     <img src={coffee.urlImage} alt="" />
                     <InfoCoffeeSelected>
@@ -235,9 +219,9 @@ export function Checkout() {
                   <strong>R$ {formatAsDecimal(totalFinally)}</strong>
                 </Total>
               </TotalDetail>
-              <NavLink role="button" to="/success" onClick={mountOrder}>
+              <ButtonOrder form="address" onClick={mountOrder} type="submit">
                 Confirmar pedido
-              </NavLink>
+              </ButtonOrder>
             </OrderList>
           </OrderContainer>
         </>

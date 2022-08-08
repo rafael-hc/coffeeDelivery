@@ -28,6 +28,11 @@ export const Address = styled.form`
   flex-wrap: wrap;
   row-gap: 1rem;
   column-gap: 0.75rem;
+  position: relative;
+
+  span {
+    margin-left: -30px;
+  }
 `
 const BaseInput = styled.input`
   display: flex;

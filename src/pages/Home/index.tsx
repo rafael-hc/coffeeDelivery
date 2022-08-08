@@ -12,9 +12,12 @@ export function Home() {
       <main>
         <h2>Nossos cafés</h2>
         <CoffeesContainer>
-          {coffeeList.map((coffee) => (
-            <CoffeeCard key={coffee.id} coffee={coffee} />
-          ))}
+          {coffeeList.map(
+            (coffee) =>
+              coffee.isStocked && (
+                <CoffeeCard key={coffee.id} coffee={coffee} />
+              ),
+          )}
         </CoffeesContainer>
       </main>
     </HomeContainer>

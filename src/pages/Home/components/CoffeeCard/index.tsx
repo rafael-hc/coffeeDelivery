@@ -30,7 +30,7 @@ export function CoffeeCard({ coffee }: Coffees) {
 
   function handleSendCoffeeToCart() {
     const coffeeToCheckout = {
-      id: uuidv4(),
+      id: coffee.id,
       name: coffee.name,
       urlImage: coffee.urlImage,
       price: coffee.price,

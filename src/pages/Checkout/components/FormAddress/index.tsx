@@ -1,5 +1,8 @@
 import { MapPinLine } from 'phosphor-react'
 import { ChangeEvent } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as zod from 'zod'
 import {
   PostalCode,
   Street,
@@ -11,12 +14,43 @@ import {
   State,
   FormContainer,
 } from './styles'
+import { Address as iAddress } from '../../../../reducers/orderCheckout/reducer'
 
 interface FormAddressProps {
   handleInputTyping: (event: ChangeEvent<HTMLInputElement>) => void
 }
 
+const addressFormValidateSchema = zod.object({
+  city: zod.string().min(1, 'Informe a cidade'),
+  complement: zod.string(),
+  district: zod.string().min(1, 'Informe o bairro'),
+  numberOf: zod
+    .number({
+      required_error: 'Informe o Número',
+      invalid_type_error: 'Formato inválido',
+    })
+    .positive(),
+  state: zod.string().min(1, 'Inform o estado').max(2, 'Use a sigla'),
+  street: zod.string().min(1, 'Informe a rua'),
+  zipCode: zod
+    .string()
+    .min(8, 'Informe um cep válido')
+    .max(10, 'Informe um cep válido'),
+})
+
+type addressFormData = zod.infer<typeof addressFormValidateSchema>
+
 export function FormAddress({ handleInputTyping }: FormAddressProps) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<addressFormData>({
+    resolver: zodResolver(addressFormValidateSchema),
+  })
+
+  function handleNewAddress(data: addressFormData) {}
+
   return (
     <FormContainer>
       <header>
@@ -26,48 +60,62 @@ export function FormAddress({ handleInputTyping }: FormAddressProps) {
           <p>Informe o endereço onde deseja receber seu pedido</p>
         </span>
       </header>
-      <Address action="">
+      <Address id="address" onSubmit={handleSubmit(handleNewAddress)}>
         <PostalCode
+          id="zipCode"
           type="text"
-          name="zipCode"
+          // name="zipCode"
           placeholder="CEP"
-          onChange={handleInputTyping}
+          maxLength={10}
+          minLength={8}
+          required
+          // onChange={handleInputTyping}
+          {...register('zipCode', { required: true, maxLength: 9 })}
         />
         <Street
           type="text"
-          name="street"
+          required
           placeholder="Rua"
-          onChange={handleInputTyping}
+          // onChange={handleInputTyping}
+          {...register('street', { required: true })}
         />
         <Number
-          type="text"
-          name="numberOf"
+          type="number"
+          required
           placeholder="Número"
-          onChange={handleInputTyping}
+          // required
+          // onChange={handleInputTyping}
+          {...register('numberOf', { required: true, valueAsNumber: true })}
         />
         <AddressSupplement
           type="text"
-          name="complement"
           placeholder="Complemento Opcional"
-          onChange={handleInputTyping}
+          // onChange={handleInputTyping}
+          {...register('complement')}
         />
         <District
           type="text"
-          name="district"
+          required
           placeholder="Bairro"
-          onChange={handleInputTyping}
+          // required
+          // onChange={handleInputTyping}
+          {...register('district')}
         />
         <City
           type="text"
-          name="city"
+          required
           placeholder="Cidade"
-          onChange={handleInputTyping}
+          // required
+          // onChange={handleInputTyping}
+          {...register('city')}
         />
         <State
           type="text"
-          name="state"
+          required
           placeholder="UF"
-          onChange={handleInputTyping}
+          maxLength={2}
+          // onChange={handleInputTyping}
+          {...register('state')}
         />
       </Address>
     </FormContainer>

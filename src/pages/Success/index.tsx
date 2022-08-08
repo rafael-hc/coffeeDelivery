@@ -10,8 +10,12 @@ import {
 } from './styles'
 
 import { CurrencyDollar, MapPin, Timer } from 'phosphor-react'
+import { useContext } from 'react'
+import { CoffeesContext } from '../../context/CoffeesContext'
 
 export function Success() {
+  const { orderCheckout } = useContext(CoffeesContext)
+
   return (
     <SuccessContainer>
       <h1>Uhu! Pedido confirmado</h1>
@@ -48,6 +52,7 @@ export function Success() {
         </SuccessInfo>
         <img src="/assets/successimg.png" alt="" />
       </SuccessContent>
+      {JSON.stringify(orderCheckout)}
     </SuccessContainer>
   )
 }
