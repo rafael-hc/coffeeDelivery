@@ -42,21 +42,19 @@ import {
 } from './styles'
 
 export function Checkout() {
-  const [selectedPayment, setSelectedPayment] = useState('')
   const [address, setAddress] = useState<Address>({} as Address)
 
   const {
     orderCoffees,
+    orderCheckout,
     updateAmountCoffee,
     removeCoffeeFromCheckout,
-    sendOrder,
+    addPaymentMethodToOrder,
   } = useContext(CoffeesContext)
-
-  const navigate = useNavigate()
 
   function handleSelectedPayment(event: MouseEvent<HTMLButtonElement>) {
     const method = event.currentTarget.name
-    setSelectedPayment(method)
+    addPaymentMethodToOrder(method)
   }
 
   function handleIncreaseQuantityOfProducts(coffeeAmount: number, id: string) {
@@ -91,15 +89,13 @@ export function Checkout() {
     setAddress(newAddress)
   }
 
-  function mountOrder() {
-    if (orderCoffees && address && selectedPayment) {
-      sendOrder()
-      navigate('/success')
-      // alert('pedido enviado')
-    } else {
-      // alert('faltando informação')
-    }
-  }
+  // function mountOrder() {
+  //   if (orderCoffees && address && orderCheckout.paymentMethod) {
+  //     alert('pedido enviado')
+  //   } else {
+  //     alert('faltando informação')
+  //   }
+  // }
 
   return (
     <CheckoutContainer>
@@ -107,7 +103,7 @@ export function Checkout() {
         <>
           <AddressContainer>
             <h3>Complete seu pedido</h3>
-            <FormAddress handleInputTyping={handleInputTyping} />
+            <FormAddress />
             <MethodsPayment>
               <header>
                 <CurrencyDollar size={22} />
@@ -121,7 +117,7 @@ export function Checkout() {
               </header>
               <ButtonContainer>
                 <ButtonPayment
-                  disabled={selectedPayment === 'credCard'}
+                  disabled={orderCheckout.paymentMethod === 'credCard'}
                   name="credCard"
                   onClick={handleSelectedPayment}
                   type="button"
@@ -130,7 +126,7 @@ export function Checkout() {
                   <p>Cartão de crédito</p>
                 </ButtonPayment>
                 <ButtonPayment
-                  disabled={selectedPayment === 'debitCard'}
+                  disabled={orderCheckout.paymentMethod === 'debitCard'}
                   name="debitCard"
                   onClick={handleSelectedPayment}
                   type="button"
@@ -139,7 +135,7 @@ export function Checkout() {
                   <p>Cartão de débito</p>
                 </ButtonPayment>
                 <ButtonPayment
-                  disabled={selectedPayment === 'money'}
+                  disabled={orderCheckout.paymentMethod === 'money'}
                   name="money"
                   onClick={handleSelectedPayment}
                   type="button"
@@ -219,7 +215,7 @@ export function Checkout() {
                   <strong>R$ {formatAsDecimal(totalFinally)}</strong>
                 </Total>
               </TotalDetail>
-              <ButtonOrder form="address" onClick={mountOrder} type="submit">
+              <ButtonOrder form="address" type="submit">
                 Confirmar pedido
               </ButtonOrder>
             </OrderList>

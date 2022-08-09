@@ -10,11 +10,35 @@ import {
 } from './styles'
 
 import { CurrencyDollar, MapPin, Timer } from 'phosphor-react'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { CoffeesContext } from '../../context/CoffeesContext'
 
 export function Success() {
   const { orderCheckout } = useContext(CoffeesContext)
+
+  let method = ''
+
+  switch (orderCheckout.paymentMethod) {
+    case 'credCard':
+      method = 'Cartão de Crédito'
+      break
+
+    case 'debitCard':
+      method = 'Cartão de Débito'
+      break
+
+    case 'money':
+      method = 'Dinheiro'
+      break
+
+    default:
+  }
+
+  useEffect(() => {
+    const stateJSON = JSON.stringify(orderCheckout)
+
+    localStorage.setItem('@coffee-delivery:coffees-checkout-1.0.0', stateJSON)
+  }, [orderCheckout])
 
   return (
     <SuccessContainer>
@@ -27,8 +51,12 @@ export function Success() {
               <MapPin size={16} weight="fill" />
             </IconAddress>
             <InfoText>
-              <p>Entrega em Rua João Daniel Martinelli, 102</p>
-              <p>Farrapos - Porto Alegre, RS</p>
+              <p>
+                {`Entrega em ${orderCheckout.address.street}, ${orderCheckout.address.numberOf}`}
+              </p>
+              <p>
+                {`${orderCheckout.address.district} - ${orderCheckout.address.city}, ${orderCheckout.address.state}`}
+              </p>
             </InfoText>
           </InfoItem>
           <InfoItem>
@@ -46,13 +74,12 @@ export function Success() {
             </MethodPayment>
             <InfoText>
               <p>Pagamento na entrega</p>
-              <strong>Cartão de Crédito</strong>
+              <strong>{method}</strong>
             </InfoText>
           </InfoItem>
         </SuccessInfo>
         <img src="/assets/successimg.png" alt="" />
       </SuccessContent>
-      {JSON.stringify(orderCheckout)}
     </SuccessContainer>
   )
 }

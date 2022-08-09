@@ -37,6 +37,7 @@ export function CoffeeCard({ coffee }: Coffees) {
       amount,
     }
     addCoffeeToCheckout(coffeeToCheckout)
+    setAmount(1)
   }
 
   function handleIncreaseQuantityOfProducts() {

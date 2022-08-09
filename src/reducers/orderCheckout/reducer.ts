@@ -39,10 +39,9 @@ export function orderCheckoutReducer(state: Order, action: any) {
           return coffee.id === action.payload.coffee.id
         })
         if (indexCoffee < 0) {
-          return {
-            ...state,
-            orderCoffees: [...state.orderCoffees, action.payload.coffee],
-          }
+          return produce(state, (draft) => {
+            draft.orderCoffees.push(action.payload.coffee)
+          })
         }
         return produce(state, (draft) => {
           draft.orderCoffees[indexCoffee].amount += action.payload.coffee.amount
@@ -53,6 +52,7 @@ export function orderCheckoutReducer(state: Order, action: any) {
         orderCoffees: [...state.orderCoffees, action.payload.coffee],
       }
     }
+
     case ActionTypes.REMOVE_COFFEES:
       return {
         ...state,
@@ -60,19 +60,38 @@ export function orderCheckoutReducer(state: Order, action: any) {
           (coffee) => coffee.id !== action.payload.id,
         ),
       }
-    case ActionTypes.UPDATE_AMOUNT_COFFEES:
-      return {
-        ...state,
-        orderCoffees: state.orderCoffees.map((coffee) => {
-          if (coffee.id === action.payload.id) {
-            coffee.amount = action.payload.amount
-          }
-          return coffee
-        }),
+
+    case ActionTypes.UPDATE_AMOUNT_COFFEES: {
+      const indexCoffee = state.orderCoffees.findIndex((coffee) => {
+        return coffee.id === action.payload.id
+      })
+      if (indexCoffee >= 0) {
+        return produce(state, (draft) => {
+          draft.orderCoffees[indexCoffee].amount = action.payload.amount
+        })
       }
+      return state
+    }
+
     case ActionTypes.SEND_ORDER:
       return produce(state, (draft) => {
         draft.isSent = new Date()
+      })
+
+    case ActionTypes.ADD_ADDRESS_TO_ORDER:
+      return produce(state, (draft) => {
+        draft.address.city = action.payload.address.city
+        draft.address.complement = action.payload.address.complement
+        draft.address.district = action.payload.address.district
+        draft.address.numberOf = action.payload.address.numberOf
+        draft.address.state = action.payload.address.state
+        draft.address.street = action.payload.address.street
+        draft.address.zipCode = action.payload.address.zipCode
+      })
+
+    case ActionTypes.ADD_PAYMENT_METHOD_TO_ORDER:
+      return produce(state, (draft) => {
+        draft.paymentMethod = action.payload.methodPayment
       })
 
     default:

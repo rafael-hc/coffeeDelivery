@@ -7,12 +7,15 @@ import {
 } from 'react'
 import {
   ActionTypes,
+  addAddressToOrderAction,
   addCoffeeToCheckoutAction,
+  addPaymentMethodToOrderAction,
   removeCoffeeFromCheckoutAction,
   sendOrderAction,
   updateAmountCoffeeAction,
 } from '../reducers/orderCheckout/actions'
 import {
+  Address,
   CoffeeAsCheckout,
   Order,
   orderCheckoutReducer,
@@ -25,6 +28,8 @@ interface CoffeesContextType {
   updateAmountCoffee: (amount: number, id: string) => void
   removeCoffeeFromCheckout: (id: string) => void
   sendOrder: () => void
+  addAddressToOrder: (address: Address) => void
+  addPaymentMethodToOrder: (methodPayment: string) => void
 }
 
 export const CoffeesContext = createContext({} as CoffeesContextType)
@@ -36,40 +41,44 @@ interface CoffeesContextProviderProps {
 export function CoffeeContextProvider({
   children,
 }: CoffeesContextProviderProps) {
-  const [orderCheckout, dispatch] = useReducer(orderCheckoutReducer, {
-    orderCoffees: [],
-    address: {
-      zipCode: '',
-      street: '',
-      numberOf: '',
-      complement: '',
-      district: '',
-      city: '',
-      state: '',
+  const [orderCheckout, dispatch] = useReducer(
+    orderCheckoutReducer,
+    {
+      orderCoffees: [],
+      address: {
+        zipCode: '',
+        street: '',
+        numberOf: '',
+        complement: '',
+        district: '',
+        city: '',
+        state: '',
+      },
+      paymentMethod: '',
     },
-    paymentMethod: '',
-  })
+    () => {
+      const storedStateAsJSON = localStorage.getItem(
+        '@coffee-delivery:coffees-checkout-1.0.0',
+      )
+      if (storedStateAsJSON) {
+        return JSON.parse(storedStateAsJSON)
+      }
+      return {
+        orderCoffees: [],
+        address: {
+          zipCode: '',
+          street: '',
+          numberOf: '',
+          complement: '',
+          district: '',
+          city: '',
+          state: '',
+        },
+        paymentMethod: '',
+      }
+    },
+  )
   const { orderCoffees } = orderCheckout
-  const [order, setOrder] = useState({} as Order)
-
-  useEffect(() => {
-    const storedStateAsJSON = localStorage.getItem(
-      '@coffee-delivery:coffees-checkout-1.0.0',
-    )
-    // if (storedStateAsJSON) {
-    //   setCoffeeCheckout(JSON.parse(storedStateAsJSON))
-    // } else {
-    //   setCoffeeCheckout([])
-    // }
-  }, [])
-
-  useEffect(() => {
-    const stateJSON = JSON.stringify(orderCoffees)
-
-    if (orderCoffees.length) {
-      localStorage.setItem('@coffee-delivery:coffees-checkout-1.0.0', stateJSON)
-    }
-  }, [orderCoffees])
 
   function addCoffeeToCheckout(coffee: CoffeeAsCheckout) {
     dispatch(addCoffeeToCheckoutAction(coffee))
@@ -87,6 +96,14 @@ export function CoffeeContextProvider({
     dispatch(sendOrderAction())
   }
 
+  function addAddressToOrder(address: Address) {
+    dispatch(addAddressToOrderAction(address))
+  }
+
+  function addPaymentMethodToOrder(methodPayment: string) {
+    dispatch(addPaymentMethodToOrderAction(methodPayment))
+  }
+
   return (
     <CoffeesContext.Provider
       value={{
@@ -96,6 +113,8 @@ export function CoffeeContextProvider({
         updateAmountCoffee,
         removeCoffeeFromCheckout,
         sendOrder,
+        addAddressToOrder,
+        addPaymentMethodToOrder,
       }}
     >
       {children}

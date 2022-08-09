@@ -1,5 +1,5 @@
 import { MapPinLine } from 'phosphor-react'
-import { ChangeEvent } from 'react'
+import { ChangeEvent, useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as zod from 'zod'
@@ -15,21 +15,14 @@ import {
   FormContainer,
 } from './styles'
 import { Address as iAddress } from '../../../../reducers/orderCheckout/reducer'
-
-interface FormAddressProps {
-  handleInputTyping: (event: ChangeEvent<HTMLInputElement>) => void
-}
+import { CoffeesContext } from '../../../../context/CoffeesContext'
+import { useNavigate } from 'react-router-dom'
 
 const addressFormValidateSchema = zod.object({
   city: zod.string().min(1, 'Informe a cidade'),
   complement: zod.string(),
   district: zod.string().min(1, 'Informe o bairro'),
-  numberOf: zod
-    .number({
-      required_error: 'Informe o Número',
-      invalid_type_error: 'Formato inválido',
-    })
-    .positive(),
+  numberOf: zod.string().min(1, 'Informe o Número'),
   state: zod.string().min(1, 'Inform o estado').max(2, 'Use a sigla'),
   street: zod.string().min(1, 'Informe a rua'),
   zipCode: zod
@@ -40,7 +33,10 @@ const addressFormValidateSchema = zod.object({
 
 type addressFormData = zod.infer<typeof addressFormValidateSchema>
 
-export function FormAddress({ handleInputTyping }: FormAddressProps) {
+export function FormAddress() {
+  const { addAddressToOrder, sendOrder } = useContext(CoffeesContext)
+  const navigate = useNavigate()
+
   const {
     register,
     handleSubmit,
@@ -49,7 +45,11 @@ export function FormAddress({ handleInputTyping }: FormAddressProps) {
     resolver: zodResolver(addressFormValidateSchema),
   })
 
-  function handleNewAddress(data: addressFormData) {}
+  function handleNewAddress(data: addressFormData) {
+    addAddressToOrder(data)
+    sendOrder()
+    navigate('/success')
+  }
 
   return (
     <FormContainer>
@@ -80,12 +80,12 @@ export function FormAddress({ handleInputTyping }: FormAddressProps) {
           {...register('street', { required: true })}
         />
         <Number
-          type="number"
+          type="text"
           required
           placeholder="Número"
           // required
           // onChange={handleInputTyping}
-          {...register('numberOf', { required: true, valueAsNumber: true })}
+          {...register('numberOf', { required: true })}
         />
         <AddressSupplement
           type="text"
