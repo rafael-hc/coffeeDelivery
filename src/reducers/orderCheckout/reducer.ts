@@ -1,4 +1,5 @@
 import { produce } from 'immer'
+import { v4 as uIdv4 } from 'uuid'
 
 import { ActionTypes } from './actions'
 
@@ -40,17 +41,25 @@ export function orderCheckoutReducer(state: Order, action: any) {
         })
         if (indexCoffee < 0) {
           return produce(state, (draft) => {
+            if (!draft.id) {
+              draft.id = uIdv4()
+            }
             draft.orderCoffees.push(action.payload.coffee)
           })
         }
         return produce(state, (draft) => {
+          if (!draft.id) {
+            draft.id = uIdv4()
+          }
           draft.orderCoffees[indexCoffee].amount += action.payload.coffee.amount
         })
       }
-      return {
-        ...state,
-        orderCoffees: [...state.orderCoffees, action.payload.coffee],
-      }
+      return produce(state, (draft) => {
+        if (!draft.id) {
+          draft.id = uIdv4()
+        }
+        draft.orderCoffees.push(action.payload.coffee)
+      })
     }
 
     case ActionTypes.REMOVE_COFFEES:

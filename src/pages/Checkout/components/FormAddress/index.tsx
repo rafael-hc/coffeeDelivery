@@ -1,5 +1,5 @@
 import { MapPinLine } from 'phosphor-react'
-import { ChangeEvent, useContext } from 'react'
+import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as zod from 'zod'
@@ -14,7 +14,6 @@ import {
   State,
   FormContainer,
 } from './styles'
-import { Address as iAddress } from '../../../../reducers/orderCheckout/reducer'
 import { CoffeesContext } from '../../../../context/CoffeesContext'
 import { useNavigate } from 'react-router-dom'
 
@@ -37,11 +36,7 @@ export function FormAddress() {
   const { addAddressToOrder, sendOrder } = useContext(CoffeesContext)
   const navigate = useNavigate()
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<addressFormData>({
+  const { register, handleSubmit } = useForm<addressFormData>({
     resolver: zodResolver(addressFormValidateSchema),
   })
 
@@ -64,57 +59,41 @@ export function FormAddress() {
         <PostalCode
           id="zipCode"
           type="text"
-          // name="zipCode"
           placeholder="CEP"
           maxLength={10}
           minLength={8}
           required
-          // onChange={handleInputTyping}
-          {...register('zipCode', { required: true, maxLength: 9 })}
+          {...register('zipCode')}
         />
         <Street
           type="text"
           required
           placeholder="Rua"
-          // onChange={handleInputTyping}
-          {...register('street', { required: true })}
+          {...register('street')}
         />
         <Number
           type="text"
           required
           placeholder="Número"
-          // required
-          // onChange={handleInputTyping}
-          {...register('numberOf', { required: true })}
+          {...register('numberOf')}
         />
         <AddressSupplement
           type="text"
           placeholder="Complemento Opcional"
-          // onChange={handleInputTyping}
           {...register('complement')}
         />
         <District
           type="text"
           required
           placeholder="Bairro"
-          // required
-          // onChange={handleInputTyping}
           {...register('district')}
         />
-        <City
-          type="text"
-          required
-          placeholder="Cidade"
-          // required
-          // onChange={handleInputTyping}
-          {...register('city')}
-        />
+        <City type="text" required placeholder="Cidade" {...register('city')} />
         <State
           type="text"
           required
           placeholder="UF"
           maxLength={2}
-          // onChange={handleInputTyping}
           {...register('state')}
         />
       </Address>

@@ -80,6 +80,7 @@ export function Success() {
         </SuccessInfo>
         <img src="/assets/successimg.png" alt="" />
       </SuccessContent>
+      {JSON.stringify(orderCheckout)}
     </SuccessContainer>
   )
 }

@@ -8,14 +8,9 @@ import {
   Trash,
   Warning,
 } from 'phosphor-react'
-import { ChangeEvent, MouseEvent, useContext, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { MouseEvent, useContext } from 'react'
 import { CoffeesContext } from '../../context/CoffeesContext'
-import {
-  Address,
-  CoffeeAsCheckout,
-  Order,
-} from '../../reducers/orderCheckout/reducer'
+import { CoffeeAsCheckout } from '../../reducers/orderCheckout/reducer'
 import { formatAsDecimal } from '../../utils/formarNumber'
 import { FormAddress } from './components/FormAddress'
 import {
@@ -42,17 +37,16 @@ import {
 } from './styles'
 
 export function Checkout() {
-  const [address, setAddress] = useState<Address>({} as Address)
-
   const {
     orderCoffees,
     orderCheckout,
+    isSent,
     updateAmountCoffee,
     removeCoffeeFromCheckout,
     addPaymentMethodToOrder,
   } = useContext(CoffeesContext)
 
-  function handleSelectedPayment(event: MouseEvent<HTMLButtonElement>) {
+  function handSelectPaymentMethod(event: MouseEvent<HTMLButtonElement>) {
     const method = event.currentTarget.name
     addPaymentMethodToOrder(method)
   }
@@ -78,28 +72,9 @@ export function Checkout() {
   const taxDelivery = 3.5
   const totalFinally = total + taxDelivery
 
-  function handleInputTyping(event: ChangeEvent<HTMLInputElement>) {
-    const { name, value } = event.target
-
-    const newAddress = {
-      ...address,
-      [name]: value,
-    }
-
-    setAddress(newAddress)
-  }
-
-  // function mountOrder() {
-  //   if (orderCoffees && address && orderCheckout.paymentMethod) {
-  //     alert('pedido enviado')
-  //   } else {
-  //     alert('faltando informação')
-  //   }
-  // }
-
   return (
     <CheckoutContainer>
-      {orderCoffees.length ? (
+      {orderCoffees.length && !isSent ? (
         <>
           <AddressContainer>
             <h3>Complete seu pedido</h3>
@@ -119,7 +94,7 @@ export function Checkout() {
                 <ButtonPayment
                   disabled={orderCheckout.paymentMethod === 'credCard'}
                   name="credCard"
-                  onClick={handleSelectedPayment}
+                  onClick={handSelectPaymentMethod}
                   type="button"
                 >
                   <CreditCard size={16} />
@@ -128,7 +103,7 @@ export function Checkout() {
                 <ButtonPayment
                   disabled={orderCheckout.paymentMethod === 'debitCard'}
                   name="debitCard"
-                  onClick={handleSelectedPayment}
+                  onClick={handSelectPaymentMethod}
                   type="button"
                 >
                   <Bank size={16} />
@@ -137,7 +112,7 @@ export function Checkout() {
                 <ButtonPayment
                   disabled={orderCheckout.paymentMethod === 'money'}
                   name="money"
-                  onClick={handleSelectedPayment}
+                  onClick={handSelectPaymentMethod}
                   type="button"
                 >
                   <Money size={16} />

@@ -12,7 +12,7 @@ import { useContext } from 'react'
 import { CoffeesContext } from '../../context/CoffeesContext'
 
 export function Header() {
-  const { orderCoffees } = useContext(CoffeesContext)
+  const { orderCoffees, isSent } = useContext(CoffeesContext)
   return (
     <HeaderContainer>
       <NavLink to="/">
@@ -28,7 +28,7 @@ export function Header() {
         </LinkLocation>
         <LinkKart to="/checkout">
           <ShoppingCart weight="fill" size={22} />
-          {orderCoffees.length ? (
+          {orderCoffees.length && !isSent ? (
             <CountKart>{orderCoffees.length}</CountKart>
           ) : (
             ''

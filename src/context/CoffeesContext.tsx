@@ -1,12 +1,5 @@
+import { useReducer, createContext, ReactNode } from 'react'
 import {
-  useReducer,
-  createContext,
-  ReactNode,
-  useEffect,
-  useState,
-} from 'react'
-import {
-  ActionTypes,
   addAddressToOrderAction,
   addCoffeeToCheckoutAction,
   addPaymentMethodToOrderAction,
@@ -24,6 +17,7 @@ import {
 interface CoffeesContextType {
   orderCoffees: CoffeeAsCheckout[]
   orderCheckout: Order
+  isSent?: Date
   addCoffeeToCheckout: (coffee: CoffeeAsCheckout) => void
   updateAmountCoffee: (amount: number, id: string) => void
   removeCoffeeFromCheckout: (id: string) => void
@@ -78,7 +72,7 @@ export function CoffeeContextProvider({
       }
     },
   )
-  const { orderCoffees } = orderCheckout
+  const { orderCoffees, isSent } = orderCheckout
 
   function addCoffeeToCheckout(coffee: CoffeeAsCheckout) {
     dispatch(addCoffeeToCheckoutAction(coffee))
@@ -109,6 +103,7 @@ export function CoffeeContextProvider({
       value={{
         orderCoffees,
         orderCheckout,
+        isSent,
         addCoffeeToCheckout,
         updateAmountCoffee,
         removeCoffeeFromCheckout,
