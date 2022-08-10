@@ -40,7 +40,6 @@ export function Checkout() {
   const {
     orderCoffees,
     orderCheckout,
-    isSent,
     updateAmountCoffee,
     removeCoffeeFromCheckout,
     addPaymentMethodToOrder,
@@ -74,7 +73,7 @@ export function Checkout() {
 
   return (
     <CheckoutContainer>
-      {orderCoffees.length && !isSent ? (
+      {orderCoffees.length ? (
         <>
           <AddressContainer>
             <h3>Complete seu pedido</h3>
