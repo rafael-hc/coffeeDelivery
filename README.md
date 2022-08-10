@@ -1,8 +1,10 @@
 # Desafio Ignite - Coffee Delivery
 
 <p align="center">
-  <img src="[public/images/how-to.gif](https://dsm01pap007files.storage.live.com/y4mJ-YJXrWjf3ObwbscqYIGecNfoVplXNMj8VPDGfmNvaLFzhH0Th7_EYvcy_KlU6QTPC8yCSrBioRx3G8JPc6YspdPhZ5oSLwTEHDHOnlZRpRTyEMNsCzxJmwpZZIuuBQ7qtxGSm2te0Dgc-_bcOBJmxzp6X99QtHuVzGoaqH_xKOGCDJB6Sp4FlixQCd8a3Sp?width=689&height=1024&cropmode=none)">
+  ![Home Page](https://dsm01pap007files.storage.live.com/y4mJ-YJXrWjf3ObwbscqYIGecNfoVplXNMj8VPDGfmNvaLFzhH0Th7_EYvcy_KlU6QTPC8yCSrBioRx3G8JPc6YspdPhZ5oSLwTEHDHOnlZRpRTyEMNsCzxJmwpZZIuuBQ7qtxGSm2te0Dgc-_bcOBJmxzp6X99QtHuVzGoaqH_xKOGCDJB6Sp4FlixQCd8a3Sp?width=689&height=1024&cropmode=none)
 </p>
+
+
 
 
 Neste repositório tem uma aplicação para gerenciar um carrinho de compras de uma cafeteria fictícia, que contém as seguintes funcionalidades:
