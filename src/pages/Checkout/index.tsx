@@ -8,7 +8,7 @@ import {
   Trash,
   Warning,
 } from 'phosphor-react'
-import { MouseEvent, useContext } from 'react'
+import { MouseEvent, useContext, useEffect } from 'react'
 import { CoffeesContext } from '../../context/CoffeesContext'
 import { CoffeeAsCheckout } from '../../reducers/orderCheckout/reducer'
 import { formatAsDecimal } from '../../utils/formarNumber'
@@ -70,6 +70,12 @@ export function Checkout() {
 
   const taxDelivery = 3.5
   const totalFinally = total + taxDelivery
+
+  useEffect(() => {
+    const stateJSON = JSON.stringify(orderCheckout)
+
+    localStorage.setItem('@coffee-delivery:coffees-checkout-1.0.0', stateJSON)
+  }, [orderCheckout])
 
   return (
     <CheckoutContainer>
