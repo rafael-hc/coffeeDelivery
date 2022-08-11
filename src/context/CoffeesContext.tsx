@@ -1,3 +1,4 @@
+import { differenceInMinutes } from 'date-fns'
 import { useReducer, createContext, ReactNode } from 'react'
 import {
   addAddressToOrderAction,
@@ -55,7 +56,28 @@ export function CoffeeContextProvider({
         '@coffee-delivery:coffees-checkout-1.0.0',
       )
       if (storedStateAsJSON) {
-        return JSON.parse(storedStateAsJSON)
+        const storageOrder: Order = JSON.parse(storedStateAsJSON)
+        const lifeTime = storageOrder.isSent
+          ? differenceInMinutes(new Date(), new Date(storageOrder.isSent))
+          : 0
+        console.log(lifeTime)
+        if (lifeTime <= 1) {
+          return JSON.parse(storedStateAsJSON)
+        } else {
+          return {
+            orderCoffees: [],
+            address: {
+              zipCode: '',
+              street: '',
+              numberOf: '',
+              complement: '',
+              district: '',
+              city: '',
+              state: '',
+            },
+            paymentMethod: '',
+          }
+        }
       }
       return {
         orderCoffees: [],
