@@ -15,6 +15,12 @@ export const IntroContainer = styled.div`
 
     img {
       order: 1;
+      object-fit: cover;
+    }
+  }
+  @media screen and (min-width: 761px) and (max-width: 950px) {
+    img {
+      object-fit: contain;
     }
   }
 `
