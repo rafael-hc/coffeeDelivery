@@ -12,6 +12,10 @@ export const HeaderContainer = styled.header`
   position: fixed;
   top: 0;
   background-color: ${(props) => props.theme.background};
+
+  @media screen and (max-width: 760px) {
+    width: 93vw;
+  }
 `
 
 export const Menu = styled.nav`
