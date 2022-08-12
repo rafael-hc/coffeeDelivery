@@ -16,6 +16,10 @@ export const HeaderContainer = styled.header`
   @media screen and (max-width: 760px) {
     width: 93vw;
   }
+  @media screen and (max-width: 950px) {
+    width: 97vw;
+    margin-left: 1rem;
+  }
 `
 
 export const Menu = styled.nav`
