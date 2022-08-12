@@ -17,8 +17,9 @@ export const HeaderContainer = styled.header`
     width: 93vw;
   }
   @media screen and (min-width: 761px) and (max-width: 950px) {
-    width: 97vw;
-    margin-left: 1rem;
+    width: 100vw;
+    padding: 2rem 1rem;
+    /* margin-left: 1rem; */
   }
 `
 
